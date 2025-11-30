@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Laboratorio ADN — POO</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="phone">
+    <button id="menuToggle" class="floating-menu" aria-label="Ajustes">⚙️</button>
+    <div class="floating-title">Tus Criaturas</div>
+    <points-display class="floating-points" aria-label="Puntos"></points-display>
+
+    <nav class="sidebar hidden" id="sidebar">
+      <menu-main></menu-main>
+    </nav>
+
+    <main id="gameArea">
+      <section class="panel">
+        <div class="panel-header">
+          <div class="panel-controls">
+          </div>
+        </div>
+        <div id="criaturasList" class="criaturas-list"></div>
+      </section>
+    </main>
+
+    <menu-secondary></menu-secondary>
+
+    <!-- Config + Logic -->
+    <script type="module" src="config.js"></script>
+    <script type="module" src="./logic/StorageAdapter.js"></script>
+    <script type="module" src="./logic/OrganismBase.js"></script>
+    <script type="module" src="./logic/Creature.js"></script>
+    <script type="module" src="./logic/FusedOrganism.js"></script>
+    <script type="module" src="./logic/CreatureManager.js"></script>
+    <script type="module" src="./logic/PointsManager.js"></script>
+    <script type="module" src="./logic/EvolutionManager.js"></script>
+    <script type="module" src="./logic/FusionManager.js"></script>
+    <script type="module" src="./logic/Game.js"></script>
+
+    <!-- Components -->
+    <script type="module" src="./components/BaseComponent.js"></script>
+    <script type="module" src="./components/overlay-modal.js"></script>
+    <script type="module" src="./components/points-display.js"></script>
+    <script type="module" src="./components/menu-main.js"></script>
+    <script type="module" src="./components/menu-secondary.js"></script>
+    <script type="module" src="./components/creature-create.js"></script>
+    <script type="module" src="./components/creature-card.js"></script>
+    <script type="module" src="./components/creature-detail.js"></script>
+    <script type="module" src="./components/evolve-selection.js"></script>
+
+    <!-- Boot -->
+    <script type="module">
+      import { Game } from './logic/Game.js';
+      import { CreatureManager } from './logic/CreatureManager.js';
+      import { PointsManager } from './logic/PointsManager.js';
+
+      const game = Game.instance(); // initialize singletons and listeners
+
+      const menuToggle = document.getElementById('menuToggle');
+      const sidebar = document.getElementById('sidebar');
+      const criaturasList = document.getElementById('criaturasList');
+
+      function renderList() {
+        criaturasList.innerHTML = '';
+        const list = CreatureManager.instance().all();
+        list.forEach(c => {
+          const el = document.createElement('creature-card');
+          el.creatureId = c.id;
+          criaturasList.appendChild(el);
+        });
+      }
+
+      // Primer renderizado
+      renderList();
+
+      // subscribe to events
+      window.addEventListener('game:storageChanged', renderList);
+      window.addEventListener('game:pointsChanged', renderList);
+
+      menuToggle.onclick = () => sidebar.classList.toggle('visible');
+
+      // 'Acariciar' button removed from UI (point gain remains via creature petting)
+    </script>
+  </div>
+</body>
+</html>

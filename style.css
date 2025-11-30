@@ -1,0 +1,209 @@
+/* Keyframe animations */
+@keyframes slideInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
+}
+
+/* Basic phone shell */
+body {
+  margin: 0;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background: #000a1a;
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  color: #00d4aa;
+}
+
+.phone {
+  width: 390px;
+  height: 780px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #0d1f3c, #112240);
+  box-shadow: 0 10px 40px rgba(0,212,170,0.2);
+  overflow: hidden;
+  position: relative;
+  border: 2px solid #00d4aa;
+  animation: slideInUp 0.6s ease-out;
+}
+
+/* Floating controls (menu button + points) */
+.floating-menu {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  color: #e6fffb;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 60;
+  box-shadow: none;
+  cursor: pointer;
+}
+.floating-menu:hover { transform: translateY(-2px) scale(1.03); }
+
+.floating-points {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 60;
+}
+#floatingTitleSpacer {}
+
+.floating-title {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 60;
+  color: #e6fffb;
+  font-weight: 700;
+  font-size: 15px;
+  pointer-events: none;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+  max-width: 60%;
+  text-align: center;
+}
+
+@media (max-width: 360px) {
+  .floating-title { left: 50%; transform: translateX(-50%); font-size:14px; max-width: 65%; }
+  .floating-menu { width:40px; height:40px; top:10px; left:8px; }
+  .floating-points { right: 8px; top: 10px; }
+}
+
+/* Sidebar */
+.sidebar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 240px;
+  height: 100%;
+  background: linear-gradient(180deg, #0a1628, #051e3e);
+  color: #00e5cc;
+  padding: 18px;
+  transform: translateX(-110%);
+  transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  z-index: 90; /* raised so sidebar overlays floating controls */
+  border-right: 2px solid #00d4aa;
+}
+.sidebar.visible { 
+  transform: translateX(0);
+  animation: slideInLeft 0.3s ease-out;
+}
+
+/* Main area */
+main { 
+  padding: 68px 14px 14px 14px; /* reserve top space for floating controls */
+  height: 100%; 
+  overflow-y: auto;
+}
+
+.panel { background: transparent; }
+.panel-header { 
+  display:flex; 
+  gap:8px; 
+  align-items:center; 
+  margin-bottom:8px;
+  animation: slideInUp 0.4s ease-out 0.1s both;
+}
+.panel-header h3 { margin:0; flex:1; }
+.panel-controls { 
+  display:flex; 
+  gap:8px;
+}
+.panel-header button { 
+  padding:6px 8px; 
+  border-radius:6px; 
+  border:none; 
+  background: linear-gradient(135deg, #00d4aa, #00a88a); 
+  color:#001f3f; 
+  cursor:pointer;
+  transition: all 0.18s ease;
+  font-weight: 600;
+  font-size:13px;
+}
+.panel-header button:hover {
+  background: linear-gradient(135deg, #00e5cc, #00d4aa);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 212, 170, 0.4);
+}
+.panel-header button:active {
+  transform: translateY(0);
+}
+
+.criaturas-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  align-items: start;
+}
+
+/* Ensure custom element hosts behave as grid items */
+.criaturas-list creature-card {
+  display: block;
+  animation: slideInUp 0.4s ease-out;
+  animation-fill-mode: both;
+}
+
+.criaturas-list creature-card:nth-child(1) { animation-delay: 0.06s; }
+.criaturas-list creature-card:nth-child(2) { animation-delay: 0.12s; }
+.criaturas-list creature-card:nth-child(3) { animation-delay: 0.18s; }
+.criaturas-list creature-card:nth-child(4) { animation-delay: 0.24s; }
+.criaturas-list creature-card:nth-child(n+5) { animation-delay: 0.3s; }
+
+/* Points display chip */
+.points-chip { 
+  background: rgba(0, 212, 170, 0.15); 
+  padding:6px 10px; 
+  border-radius:999px; 
+  color:#00e5cc; 
+  font-weight:600;
+  transition: all 0.3s ease;
+  border: 1px solid #00d4aa;
+}
+
+.points-chip:hover {
+  background: rgba(0, 212, 170, 0.25);
+  transform: scale(1.05);
+}
+
+/* Small responsive touches */
+button { 
+  cursor:pointer;
+}
