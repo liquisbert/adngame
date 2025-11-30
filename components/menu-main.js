@@ -95,7 +95,7 @@ class MenuMain extends HTMLElement {
             <h3 style="margin-top:0;color:#001f3f;">Cómo jugar</h3>
             <ul style="margin:8px 0 12px 18px;line-height:1.5;color:#001f3f;">
               <li><strong>Crear criaturas:</strong> la primera es <em>GRATIS</em>, las siguientes cuestan 20 puntos.</li>
-              <li><strong>Acariciar:</strong> toca "Acariciar" en el detalle para ganar +2 puntos (animación 1.5s).</li>
+              <li><strong>Acariciar:</strong> toca "Acariciar" en el detalle para ganar +2 puntos.</li>
               <li><strong>Ver detalle:</strong> haz click en una tarjeta para abrir su ficha y opciones.</li>
               <li><strong>Fusionar:</strong> combina criaturas para crear híbridos con nuevas apariencias.</li>
               <li><strong>Puntos:</strong> compra puntos desde el menú secundario o consíguelos jugando.</li>
