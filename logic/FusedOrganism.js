@@ -1,4 +1,10 @@
 // FusedOrganism.js
+// ============================================
+// Clase que representa criaturas nacidas de la fusión de dos padres
+// Hereda todas las propiedades de Creature pero añade linaje (guardando IDs de padres)
+// Cuando evoluciona, vuelve a generar una Creature normal
+// ============================================
+
 import { Creature } from './Creature.js';
 
 /**
@@ -9,7 +15,8 @@ import { Creature } from './Creature.js';
 export class FusedOrganism extends Creature {
   constructor({ id, name, level = 1, foodPoints = 0, spriteKey = 'sombra', historyADN = [], createdAt = null, parentIds = [] }) {
     super({ id, name, level, foodPoints, spriteKey, historyADN, createdAt });
-    this.parentIds = parentIds; // IDs de los dos progenitores
+    // IDs de los dos organismos que se fusionaron para crear este
+    this.parentIds = parentIds;
   }
 
   /**

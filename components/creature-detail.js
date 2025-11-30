@@ -90,6 +90,11 @@ tpl.innerHTML = `
     .meta{
       flex:1;
     }
+    /* Barra de comida: contenedor y relleno */
+    #foodBar { margin-top:8px; }
+    .food-label { color: #0b1220; font-weight:600; margin-bottom:6px; }
+    .bar{ width:100%; height:12px; background: rgba(13,31,60,0.24); border-radius:8px; overflow:hidden; border:1px solid rgba(0,0,0,0.18); }
+    .bar-fill{ height:100%; width:0%; background: linear-gradient(90deg,#00d4aa,#00a88a); transition: width 0.3s ease; }
     
     h3{
       margin:0;
@@ -214,7 +219,12 @@ tpl.innerHTML = `
       <div class="meta">
         <div id="nameWrap"><h3 id="name">Nombre</h3></div>
         <small id="level">Nv.1</small>
-        <div id="food">Food: 0</div>
+        <div id="foodBar">
+          <div class="food-label" id="foodLabel">Comida: 0</div>
+          <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+            <div class="bar-fill" id="foodFill" style="width:0%"></div>
+          </div>
+        </div>
         <div style="margin-top:8px" class="controls">
           <button id="feed">Alimentar (gasta 1 punto)</button>
           <button id="selectFuse" class="muted">Fusionar</button>
@@ -305,7 +315,24 @@ class CreatureDetail extends HTMLElement {
     en.setAttribute('data-id', this.id);
     nameWrap.appendChild(en);
     this.shadowRoot.getElementById('level').textContent = `Nv.${c.level}`;
-    this.shadowRoot.getElementById('food').textContent = `Food: ${c.foodPoints||0}`;
+    // Calcular porcentaje de comida hacia la siguiente evolución
+    const needed = EvolutionManager.instance().requiredFoodForLevel(c.level + 1) || 1;
+    const current = c.foodPoints || 0;
+    const percent = Math.min(100, Math.round((current / needed) * 100));
+    const fill = this.shadowRoot.getElementById('foodFill');
+    const label = this.shadowRoot.getElementById('foodLabel');
+    if(fill){
+      fill.style.width = percent + '%';
+      const bar = fill.parentElement;
+      if(bar) bar.setAttribute('aria-valuenow', String(percent));
+    }
+    if(label){
+      if(current >= needed){
+        label.textContent = `${current}/${needed} - Listo para evolucionar`;
+      } else {
+        label.textContent = `${current}/${needed} comida (${percent}%)`;
+      }
+    }
     const key = c.spriteKey || (c.level ===1 ? 'sombra' : (c.historyADN && c.historyADN.length ? c.historyADN[c.historyADN.length-1] : 'sombra'));
     this.shadowRoot.getElementById('avatar').textContent = SPRITES[key] || '?';
   }

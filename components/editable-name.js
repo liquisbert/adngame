@@ -1,4 +1,12 @@
 // editable-name.js
+// ============================================
+// Componente reutilizable para editar nombres
+// Funciona en 2 modos:
+// 1. Modo "vista" (data-id): muestra el nombre con botón lápiz para editar
+// 2. Modo "formulario" (sin data-id): input para crear nuevas criaturas
+// Valida que los nombres cumplan con las reglas (2-24 caracteres, caracteres permitidos)
+// ============================================
+
 import { CreatureManager } from '../logic/CreatureManager.js';
 import { NameValidator } from '../logic/NameValidator.js';
 
@@ -28,6 +36,7 @@ tpl.innerHTML = `
   <span class="root">
     <span class="view">
       <span class="name-label" id="label">Nombre</span>
+      <!-- Botón lápiz para editar el nombre (solo en modo vista) -->
       <button class="icon" id="editBtn" title="Editar nombre">✏️</button>
     </span>
   </span>
@@ -41,33 +50,52 @@ class EditableName extends HTMLElement {
   }
 
   connectedCallback(){
+    // Verificar si estamos en modo vista (con data-id) o modo formulario
     this._id = this.getAttribute('data-id') || null;
     this._label = this.shadowRoot.getElementById('label');
     this._editBtn = this.shadowRoot.getElementById('editBtn');
 
     if(this._id){
+      // Modo vista: mostrar nombre actual con botón para editar
       const c = CreatureManager.instance().get(this._id);
       this._label.textContent = c ? c.name : 'Sin nombre';
+      // Al click en el lápiz, iniciar edición
       this._editBtn.onclick = (e) => { e.stopPropagation(); this.startEdit(); };
     } else {
-      // input mode for forms
-      this.renderInput();
+      // Modo formulario: mostrar solo el input (sin botones Guardar/Cancelar)
+      this.renderInput('', false);
     }
   }
 
-  renderInput(initial=''){
+  // Renderizar el input de edición para crear o editar nombres
+  renderInput(initial='', showButtons = true){
     this._editing = true;
     this.shadowRoot.innerHTML = '';
     const wrap = document.createElement('span');
     wrap.className = 'root';
-    wrap.innerHTML = `
-      <span class="editor">
-        <input id="input" placeholder="Nombre de tu criatura" />
-        <button class="save" id="saveBtn">Guardar</button>
-        <button class="cancel" id="cancelBtn">Cancelar</button>
-      </span>
-      <div class="msg" id="msg"></div>
-    `;
+    if (showButtons) {
+      wrap.innerHTML = `
+        <span class="editor">
+          <!-- Input del nombre -->
+          <input id="input" placeholder="Nombre de tu criatura" maxlength="24" />
+          <!-- Botón guardar cambios -->
+          <button class="save" id="saveBtn">Guardar</button>
+          <!-- Botón cancelar edición -->
+          <button class="cancel" id="cancelBtn">Cancelar</button>
+        </span>
+        <!-- Mensaje de error si el nombre no es válido -->
+        <div class="msg" id="msg"></div>
+      `;
+    } else {
+      wrap.innerHTML = `
+        <span class="editor">
+          <!-- Input del nombre (solo input en formularios) -->
+          <input id="input" placeholder="Nombre de tu criatura" maxlength="24" />
+        </span>
+        <!-- Mensaje de error si el nombre no es válido -->
+        <div class="msg" id="msg"></div>
+      `;
+    }
     this.shadowRoot.appendChild(document.createElement('style')).textContent = tpl.content.querySelector('style').textContent;
     this.shadowRoot.appendChild(wrap);
 
@@ -78,35 +106,67 @@ class EditableName extends HTMLElement {
 
     this._input.value = initial || this.getAttribute('value') || '';
 
+    // Función para validar el nombre en tiempo real
     const validate = () => {
       const res = NameValidator.validate(this._input.value);
-      if(!res.valid){ this._msg.textContent = res.message; this._input.classList.add('error'); this._saveBtn.disabled = true; }
-      else { this._msg.textContent = ''; this._input.classList.remove('error'); this._saveBtn.disabled = false; }
+      if(!res.valid){
+        // Si hay error, mostrar mensaje y desactivar botón guardar
+        this._msg.textContent = res.message;
+        this._input.classList.add('error');
+        this._saveBtn.disabled = true;
+      } else {
+        // Si es válido, limpiar mensaje y activar botón
+        this._msg.textContent = '';
+        this._input.classList.remove('error');
+        this._saveBtn.disabled = false;
+      }
       return res.valid;
     };
 
-    this._input.addEventListener('input', validate);
-    this._input.addEventListener('keydown', (e)=>{ if(e.key==='Enter' && validate()){ this.finishEdit(true); } else if(e.key==='Escape'){ this.finishEdit(false); } });
-    this._saveBtn.onclick = ()=> { if(validate()) this.finishEdit(true); };
-    this._cancelBtn.onclick = ()=> this.finishEdit(false);
+    // Validar mientras se escribe
+    this._input.addEventListener('input', (e) => {
+      validate();
+      // Si estamos en modo formulario, notificar cambios para que el formulario padre pueda leer el valor
+      if (!showButtons) {
+        this.dispatchEvent(new CustomEvent('name-changed', { detail: { value: this._input.value } }));
+      }
+    });
+    // Permitir guardar con Enter o cancelar con Escape
+    this._input.addEventListener('keydown', (e)=>{
+      if(e.key==='Enter' && validate()){ 
+        this.finishEdit(true); 
+      } else if(e.key==='Escape'){ 
+        this.finishEdit(false); 
+      } 
+    });
+    // Si se mostraron botones (modo edición en línea), conectar sus handlers
+    if (showButtons) {
+      this._saveBtn = this.shadowRoot.getElementById('saveBtn');
+      this._cancelBtn = this.shadowRoot.getElementById('cancelBtn');
+      this._saveBtn.onclick = ()=> { if(validate()) this.finishEdit(true); };
+      this._cancelBtn.onclick = ()=> this.finishEdit(false);
+    }
 
-    // initial validate
+    // Validar al inicial y poner foco en el input
     validate();
     setTimeout(()=> this._input.focus(), 50);
   }
 
+  // Iniciar modo edición (desde modo vista con data-id)
   startEdit(){
     if(this._editing) return;
     const current = this._label ? this._label.textContent : this.getAttribute('value') || '';
     this.shadowRoot.innerHTML = '';
-    // reuse input rendering
+    // Reutilizar el input renderizado
     this.renderInput(current);
   }
 
+  // Finalizar edición: guardar cambios o cancelar
   finishEdit(save){
     const val = this._input ? this._input.value.trim() : null;
     if(save && val && NameValidator.validate(val).valid){
       if(this._id){
+        // Modo vista: guardar en el CreatureManager y actualizar la criatura
         CreatureManager.instance().update(this._id, { name: val });
         window.dispatchEvent(new Event('game:storageChanged'));
         // restore view

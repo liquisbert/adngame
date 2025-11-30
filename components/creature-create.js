@@ -1,4 +1,11 @@
 // creature-create.js
+// ============================================
+// Modal para crear una nueva criatura
+// Muestra un formulario con input del nombre y botones Crear/Cancelar
+// Valida el nombre y comprueba si el jugador tiene suficientes puntos
+// Primera criatura es GRATIS, las siguientes cuestan 20 puntos
+// ============================================
+
 import { CreatureManager } from '../logic/CreatureManager.js';
 import { PointsManager } from '../logic/PointsManager.js';
 import '../components/editable-name.js';

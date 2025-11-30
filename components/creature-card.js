@@ -1,5 +1,12 @@
 // creature-card.js
+// ============================================
+// Componente visual: tarjeta de criatura en el grid
+// Muestra la criatura con imagen (emoji), nombre y nivel
+// Al hacer click abre el modal de detalle para ver opciones (acariciar, alimentar, fusionar, eliminar)
+// ============================================
+
 import { CreatureManager } from '../logic/CreatureManager.js';
+import { EvolutionManager } from '../logic/EvolutionManager.js';
 import { SPRITES } from '../config.js';
 
 const tpl = document.createElement('template');
@@ -80,13 +87,17 @@ tpl.innerHTML = `
       margin-top:4px;
       opacity: 0.95;
     }
+    /* Mini barra de comida dentro de la tarjeta */
+    .mini-bar{ width:100%; height:8px; background: rgba(13,31,60,0.2); border-radius:6px; overflow:hidden; margin-top:6px; border:1px solid rgba(0,0,0,0.12); }
+    .mini-fill{ height:100%; width:0%; background: linear-gradient(90deg,#00d4aa,#00a88a); transition: width 0.28s ease; }
     .food-updated { animation: foodPulse 0.6s ease-in-out; }
   </style>
   <div class="card" tabindex="0" role="button" aria-label="Ver detalles de criatura">
     <div class="img" id="avatar">?</div>
     <div class="meta">
       <h4 id="title">Nombre</h4>
-      <small id="subtitle">Nv.1 • Food:0</small>
+      <small id="subtitle">Nv.1</small>
+      <div class="mini-bar" id="miniFood"><div class="mini-fill" id="miniFill" style="width:0%"></div></div>
     </div>
   </div>
 `;
@@ -105,6 +116,7 @@ class CreatureCard extends HTMLElement {
   }
 
   connectedCallback() {
+    // Función para abrir el modal de detalle de la criatura
     const openDetail = () => {
       const modal = document.createElement('overlay-modal');
       modal.innerHTML = `<creature-detail data-id="${this._id}"></creature-detail>`;
@@ -113,7 +125,9 @@ class CreatureCard extends HTMLElement {
 
     const cardEl = this.shadowRoot.querySelector('.card');
     if (cardEl) {
+      // Al hacer click en la tarjeta, abre el detalle
       cardEl.onclick = openDetail;
+      // También funciona con Enter o barra espaciadora (accesibilidad)
       cardEl.onkeydown = (e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
@@ -122,9 +136,11 @@ class CreatureCard extends HTMLElement {
       };
     }
 
+    // Escuchar cambios para actualizar la tarjeta si la criatura se modifica
     window.addEventListener('game:storageChanged', ()=> this.render());
   }
 
+  // Actualizar la información mostrada en la tarjeta
   render(){
     if(!this._id) return;
     const c = CreatureManager.instance().get(this._id);
@@ -140,8 +156,20 @@ class CreatureCard extends HTMLElement {
       void subtitleEl.offsetWidth; // trigger reflow
       subtitleEl.classList.add('food-updated');
     }
-    
-    subtitleEl.textContent = `Nv.${c.level} • Food: ${c.foodPoints||0}`;
+
+    // Mostrar nivel y mini barra de progreso de comida
+    subtitleEl.textContent = `Nv.${c.level}`;
+    try {
+      const needed = EvolutionManager.instance().requiredFoodForLevel(c.level + 1) || 1;
+      const current = c.foodPoints || 0;
+      const percent = Math.min(100, Math.round((current / needed) * 100));
+      const miniFill = this.shadowRoot.getElementById('miniFill');
+      if(miniFill){ miniFill.style.width = percent + '%'; miniFill.setAttribute('title', `${current}/${needed} (${percent}%)`); }
+    } catch(e) {
+      // fallback: mostrar solo food points si algo sale mal
+      const miniFill = this.shadowRoot.getElementById('miniFill');
+      if(miniFill){ miniFill.style.width = '0%'; }
+    }
     
     const key = c.spriteKey || (c.level === 1 ? 'sombra' : (c.historyADN && c.historyADN.length ? c.historyADN[c.historyADN.length-1] : 'sombra'));
     this.shadowRoot.getElementById('avatar').textContent = SPRITES[key] || '?';

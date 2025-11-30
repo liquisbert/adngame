@@ -7,28 +7,38 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <!-- Contenedor principal que simula una pantalla de celular -->
   <div class="phone">
+    <!-- Botón flotante para abrir/cerrar el menú de configuración (tuerca) -->
     <button id="menuToggle" class="floating-menu" aria-label="Ajustes">⚙️</button>
+    
+    <!-- Título flotante en la parte superior central -->
     <div class="floating-title">Tus Criaturas</div>
+    
+    <!-- Mostrador de puntos en la esquina superior derecha -->
     <points-display class="floating-points" aria-label="Puntos"></points-display>
 
+    <!-- Menú lateral con opciones (Tutorial, Reiniciar, Cerrar menú) -->
     <nav class="sidebar hidden" id="sidebar">
       <menu-main></menu-main>
     </nav>
 
+    <!-- Área principal donde se muestra la lista de criaturas -->
     <main id="gameArea">
       <section class="panel">
         <div class="panel-header">
           <div class="panel-controls">
           </div>
         </div>
+        <!-- Grid de tarjetas de criaturas (2 columnas) -->
         <div id="criaturasList" class="criaturas-list"></div>
       </section>
     </main>
 
+    <!-- Menú flotante inferior con botones para comprar puntos y crear criatura -->
     <menu-secondary></menu-secondary>
 
-    <!-- Config + Logic -->
+    <!-- Scripts de configuración y lógica del juego -->
     <script type="module" src="config.js"></script>
     <script type="module" src="./logic/StorageAdapter.js"></script>
     <script type="module" src="./logic/OrganismBase.js"></script>
@@ -40,7 +50,7 @@
     <script type="module" src="./logic/FusionManager.js"></script>
     <script type="module" src="./logic/Game.js"></script>
 
-    <!-- Components -->
+    <!-- Scripts de componentes visuales (tarjetas, modales, menús) -->
     <script type="module" src="./components/BaseComponent.js"></script>
     <script type="module" src="./components/overlay-modal.js"></script>
     <script type="module" src="./components/points-display.js"></script>
@@ -50,19 +60,22 @@
     <script type="module" src="./components/creature-card.js"></script>
     <script type="module" src="./components/creature-detail.js"></script>
     <script type="module" src="./components/evolve-selection.js"></script>
+    <script type="module" src="./components/editable-name.js"></script>
 
-    <!-- Boot -->
+    <!-- Script de inicialización: configura el juego y muestra la lista de criaturas -->
     <script type="module">
       import { Game } from './logic/Game.js';
       import { CreatureManager } from './logic/CreatureManager.js';
       import { PointsManager } from './logic/PointsManager.js';
 
-      const game = Game.instance(); // initialize singletons and listeners
+      // Inicializa los componentes principales del juego (Creature Manager, Points Manager, etc)
+      const game = Game.instance();
 
       const menuToggle = document.getElementById('menuToggle');
       const sidebar = document.getElementById('sidebar');
       const criaturasList = document.getElementById('criaturasList');
 
+      // Función para mostrar la lista de criaturas en el grid
       function renderList() {
         criaturasList.innerHTML = '';
         const list = CreatureManager.instance().all();
@@ -73,17 +86,19 @@
         });
       }
 
-      // Primer renderizado
+      // Primer renderizado de la lista al cargar la página
       renderList();
 
-      // subscribe to events
+      // Escuchar eventos de cambios en el almacenamiento (cuando se crea/elimina/modifica una criatura o puntos)
       window.addEventListener('game:storageChanged', renderList);
       window.addEventListener('game:pointsChanged', renderList);
 
+      // Toggle para abrir/cerrar el menú lateral al hacer click en la tuerca
       menuToggle.onclick = () => sidebar.classList.toggle('visible');
-
-      // 'Acariciar' button removed from UI (point gain remains via creature petting)
     </script>
+  </div>
+</body>
+</html>
   </div>
 </body>
 </html>

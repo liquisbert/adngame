@@ -1,4 +1,9 @@
 // FusionManager.js
+// ============================================
+// Gestor de fusiones: controla la combinación de dos criaturas del mismo nivel
+// Verifica que ambas tengan suficiente comida y crea una criatura fusionada
+// ============================================
+
 import { CreatureManager } from './CreatureManager.js';
 import { EvolutionManager } from './EvolutionManager.js';
 import { Creature } from './Creature.js';
@@ -6,6 +11,7 @@ import { FusedOrganism } from './FusedOrganism.js';
 
 export class FusionManager {
   constructor() {
+    // Singleton: solo una instancia
     if (FusionManager._instance) return FusionManager._instance;
     FusionManager._instance = this;
   }
@@ -14,13 +20,15 @@ export class FusionManager {
     return FusionManager._instance || new FusionManager();
   }
 
+  // Verificar si dos criaturas pueden fusionarse
+  // Requisitos: ser del mismo nivel y tener comida suficiente para evolucionar al siguiente nivel
   canFuse(a, b) {
     if (!a || !b) return false;
-    if (a.id === b.id) return false;
-    if (a.level !== b.level) return false;
+    if (a.id === b.id) return false; // No puede fusionarse consigo misma
+    if (a.level !== b.level) return false; // Deben estar en el mismo nivel
     const target = a.level + 1;
     const req = EvolutionManager.instance().requiredFoodForLevel(target);
-    return (a.foodPoints >= req && b.foodPoints >= req);
+    return (a.foodPoints >= req && b.foodPoints >= req); // Ambas deben tener comida suficiente
   }
 
   /**

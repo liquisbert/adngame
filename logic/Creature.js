@@ -1,4 +1,10 @@
 // Creature.js
+// ============================================
+// Clase que representa una criatura normal
+// Hereda de OrganismBase que contiene propiedades y métodos comunes
+// Cada criatura tiene: ID, nombre, nivel, puntos de comida, forma (sprite), historia de evolución
+// ============================================
+
 import { OrganismBase } from './OrganismBase.js';
 
 /**
@@ -14,6 +20,7 @@ export class Creature extends OrganismBase {
 
   /**
    * Método especializado: clona como Creature (no otra subclase)
+   * Se usa cuando evoluciona a nivel siguiente
    */
   cloneAsNextLevel() {
     return new Creature({
