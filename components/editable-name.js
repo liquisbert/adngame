@@ -22,16 +22,16 @@ tpl.innerHTML = `
       word-break:break-word;
     }
     button.icon{
-      background:transparent;border:none;color:#9eeed4;cursor:pointer;padding:5px;border-radius:6px;font-size:14px;
+      background:transparent;border:none;color:#60A5FA;cursor:pointer;padding:5px;border-radius:6px;font-size:14px;
     }
-    button.icon:hover{background:rgba(0,212,170,0.06)}
+    button.icon:hover{background:rgba(29,78,216,0.06)}
     .editor{display:flex;gap:8px;align-items:center}
-    input{name:input; padding:6px 8px;border-radius:6px;border:1px solid rgba(0,212,170,0.12);background:rgba(13,31,60,0.85);color:#dffbf0}
-    input:focus{outline:none;box-shadow:0 0 0 3px rgba(0,212,170,0.06);border-color:#00d4aa}
+    input{name:input; padding:6px 8px;border-radius:6px;border:1px solid rgba(29,78,216,0.12);background:rgba(13,31,60,0.85);color:#dffbf0}
+    input:focus{outline:none;box-shadow:0 0 0 3px rgba(29,78,216,0.06);border-color:#1D4ED8}
     .error{border-color:#ef4444}
     .msg{font-size:12px;color:#ffb4b4;margin-left:4px}
-    button.save{background:#00d4aa;color:#001f3f;padding:5px 8px;border-radius:6px;border:none;cursor:pointer;font-size:13px}
-    button.cancel{background:transparent;color:#9eeed4;border:1px solid rgba(158,238,212,0.08);padding:5px 8px;border-radius:6px;font-size:13px}
+    button.save{background:#1D4ED8;color:#001f3f;padding:5px 8px;border-radius:6px;border:none;cursor:pointer;font-size:13px}
+    button.cancel{background:transparent;color:#60A5FA;border:1px solid rgba(96,165,250,0.18);padding:5px 8px;border-radius:6px;font-size:13px}
   </style>
   <span class="root">
     <span class="view">
@@ -113,12 +113,12 @@ class EditableName extends HTMLElement {
         // Si hay error, mostrar mensaje y desactivar botón guardar
         this._msg.textContent = res.message;
         this._input.classList.add('error');
-        this._saveBtn.disabled = true;
+        if(this._saveBtn) this._saveBtn.disabled = true;
       } else {
         // Si es válido, limpiar mensaje y activar botón
         this._msg.textContent = '';
         this._input.classList.remove('error');
-        this._saveBtn.disabled = false;
+        if(this._saveBtn) this._saveBtn.disabled = false;
       }
       return res.valid;
     };

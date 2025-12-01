@@ -9,7 +9,7 @@ tpl.innerHTML = `
     
     h3{
       margin:0 0 8px 0;
-      color:#00e5cc;
+      color:#3B82F6;
       animation: slideInUp 0.4s ease-out;
     }
     
@@ -21,11 +21,11 @@ tpl.innerHTML = `
     
     li{
       padding:8px 0;
-      border-bottom:1px solid rgba(0, 212, 170, 0.15);
+      border-bottom:1px solid rgba(29, 78, 216, 0.12);
       cursor:pointer;
       transition: all 0.2s ease;
       animation: slideInLeft 0.3s ease-out;
-      color: #00d4aa;
+      color: #1D4ED8;
     }
     
     li:nth-child(1) { animation-delay: 0.08s; }
@@ -35,9 +35,9 @@ tpl.innerHTML = `
     li:nth-child(5) { animation-delay: 0.40s; }
     
     li:hover{
-      color: #00e5cc;
+      color: #3B82F6;
       padding-left: 8px;
-      background: rgba(0, 212, 170, 0.15);
+      background: rgba(29, 78, 216, 0.10);
       border-radius: 4px;
     }
     
@@ -102,7 +102,7 @@ class MenuMain extends HTMLElement {
               <li><strong>Guardado:</strong> el juego guarda automáticamente en tu navegador.</li>
             </ul>
             <div style="text-align:right;margin-top:8px;">
-              <button id="closeTut" style="background:#00d4aa;color:#012; padding:6px 8px;border-radius:6px;border:none;cursor:pointer;font-size:13px;">Cerrar</button>
+              <button id="closeTut" style="background:#1D4ED8;color:#012; padding:6px 8px;border-radius:6px;border:none;cursor:pointer;font-size:13px;">Cerrar</button>
             </div>
           </div>
         `;

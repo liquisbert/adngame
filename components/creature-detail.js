@@ -4,6 +4,7 @@ import { PointsManager } from '../logic/PointsManager.js';
 import { EvolutionManager } from '../logic/EvolutionManager.js';
 import { FusionManager } from '../logic/FusionManager.js';
 import { SPRITES } from '../config.js';
+import './fusion-animation.js';
 
 const tpl = document.createElement('template');
 tpl.innerHTML = `
@@ -45,8 +46,8 @@ tpl.innerHTML = `
       align-items:center;
       justify-content:center;
       font-size:56px;
-      background: linear-gradient(135deg, rgba(0, 212, 170, 0.2), rgba(0, 168, 138, 0.2));
-      border: 2px solid #00d4aa;
+      background: linear-gradient(135deg, rgba(29,78,216,0.22), rgba(37,99,235,0.18));
+      border: 2px solid #1D4ED8;
       transition: all 0.3s ease;
       cursor: pointer;
       position: relative;
@@ -54,9 +55,9 @@ tpl.innerHTML = `
     }
     
     .avatar:hover {
-      background: linear-gradient(135deg, rgba(0, 212, 170, 0.3), rgba(0, 168, 138, 0.3));
+      background: linear-gradient(135deg, rgba(29,78,216,0.28), rgba(37,99,235,0.22));
       transform: scale(1.05);
-      box-shadow: 0 4px 12px rgba(0, 212, 170, 0.3);
+      box-shadow: 0 4px 12px rgba(29,78,216,0.28);
     }
     
     .avatar:active {
@@ -79,8 +80,8 @@ tpl.innerHTML = `
       font-size: 24px;
       font-weight: 700;
       pointer-events: none;
-      color: #00e5cc;
-      text-shadow: 0 2px 4px rgba(0, 212, 170, 0.3);
+      color: #3B82F6;
+      text-shadow: 0 2px 4px rgba(29,78,216,0.28);
     }
     
     .pet-feedback.show {
@@ -94,7 +95,7 @@ tpl.innerHTML = `
     #foodBar { margin-top:8px; }
     .food-label { color: #0b1220; font-weight:600; margin-bottom:6px; }
     .bar{ width:100%; height:12px; background: rgba(13,31,60,0.24); border-radius:8px; overflow:hidden; border:1px solid rgba(0,0,0,0.18); }
-    .bar-fill{ height:100%; width:0%; background: linear-gradient(90deg,#00d4aa,#00a88a); transition: width 0.3s ease; }
+    .bar-fill{ height:100%; width:0%; background: linear-gradient(90deg,#1D4ED8,#2563EB); transition: width 0.3s ease; }
     
     h3{
       margin:0;
@@ -106,7 +107,7 @@ tpl.innerHTML = `
 
     .edit-name{
       font-size:14px;
-      color:#9eeed4;
+      color:#60A5FA;
       background:transparent;
       border:none;
       cursor:pointer;
@@ -116,14 +117,14 @@ tpl.innerHTML = `
     }
 
     .edit-name:hover{
-      background: rgba(0,212,170,0.06);
+      background: rgba(29,78,216,0.06);
     }
 
     input.name-input{
       font-size:18px;
       padding:4px 8px;
       border-radius:6px;
-      border:1px solid rgba(0,212,170,0.12);
+      border:1px solid rgba(29,78,216,0.12);
       background: rgba(13,31,60,0.85);
       color: #dffbf0;
       outline: none;
@@ -145,7 +146,7 @@ tpl.innerHTML = `
       padding:6px 8px;
       border-radius:6px;
       border:none;
-      background: linear-gradient(135deg, #00d4aa, #00a88a);
+      background: linear-gradient(135deg, #1D4ED8, #2563EB);
       color:#001f3f;
       transition: all 0.18s ease;
       cursor: pointer;
@@ -154,9 +155,9 @@ tpl.innerHTML = `
     }
     
     button:hover{
-      background: linear-gradient(135deg, #00e5cc, #00d4aa);
+      background: linear-gradient(135deg, #3B82F6, #1D4ED8);
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 212, 170, 0.4);
+      box-shadow: 0 4px 12px rgba(29,78,216,0.36);
     }
     
     button:active{
@@ -191,17 +192,17 @@ tpl.innerHTML = `
       padding:6px;
       border-radius:8px;
       background: linear-gradient(135deg, #0d1f3c, #112240);
-      border:2px solid #00d4aa;
+      border:2px solid #1D4ED8;
       cursor:pointer;
       transition: all 0.2s ease;
-      color: #00e5cc;
+      color: #3B82F6;
     }
     
     .mini:hover{
-      border-color: #00e5cc;
+      border-color: #3B82F6;
       background: linear-gradient(135deg, #112240, #1a3a50);
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 212, 170, 0.3);
+      box-shadow: 0 4px 12px rgba(79,70,229,0.28);
     }
     
     .mini:active{
@@ -422,21 +423,40 @@ class CreatureDetail extends HTMLElement {
       alert('No cumplen requisitos de food o nivel para fusionar.');
       return;
     }
-    const newC = fm.fuse(a.id, b.id);
-    window.dispatchEvent(new Event('game:storageChanged'));
-    // show ADN options if exist
-    const opts = EvolutionManager.instance().optionsForLevel(newC.level);
-    if(opts && opts.length) {
-      const modal = document.createElement('overlay-modal');
-      modal.innerHTML = `<evolve-selection data-id="${newC.id}"></evolve-selection>`;
-      document.body.appendChild(modal);
-    } else {
-      // fallback: set sprite to last history
-      const key = newC.historyADN.length ? newC.historyADN[newC.historyADN.length-1] : null;
-      if(key) CreatureManager.instance().update(newC.id, { spriteKey: key });
-    }
-    const modal = this.closest('overlay-modal');
-    if(modal) modal.remove();
+    
+    // Obtener sprites de ambas criaturas ANTES de fusionar
+    const spriteA = a.spriteKey || (a.level === 1 ? 'sombra' : (a.historyADN && a.historyADN.length ? a.historyADN[a.historyADN.length-1] : 'sombra'));
+    const spriteB = b.spriteKey || (b.level === 1 ? 'sombra' : (b.historyADN && b.historyADN.length ? b.historyADN[b.historyADN.length-1] : 'sombra'));
+    
+    // Cerrar el modal de detalle ANTES de la animación
+    const detailModal = this.closest('overlay-modal');
+    if(detailModal) detailModal.remove();
+    
+    // Crear y reproducir animación de fusión
+    const fusionAnim = document.createElement('fusion-animation');
+    document.body.appendChild(fusionAnim);
+    
+    // Ejecutar la fusión DENTRO del callback de la animación
+    fusionAnim.play(spriteA, spriteB, 'sombra', () => {
+      // Fusionar después de la animación
+      const newC = fm.fuse(a.id, b.id);
+      const newSpriteKey = newC.spriteKey || (newC.level === 1 ? 'sombra' : (newC.historyADN && newC.historyADN.length ? newC.historyADN[newC.historyADN.length-1] : 'sombra'));
+      
+      // Actualizar el sprite de la nueva criatura
+      window.dispatchEvent(new Event('game:storageChanged'));
+      
+      // Mostrar opciones de ADN si existen
+      const opts = EvolutionManager.instance().optionsForLevel(newC.level);
+      if(opts && opts.length) {
+        const modal = document.createElement('overlay-modal');
+        modal.innerHTML = `<evolve-selection data-id="${newC.id}"></evolve-selection>`;
+        document.body.appendChild(modal);
+      } else {
+        // fallback: set sprite to last history
+        const key = newC.historyADN.length ? newC.historyADN[newC.historyADN.length-1] : null;
+        if(key) CreatureManager.instance().update(newC.id, { spriteKey: key });
+      }
+    });
   }
 }
 customElements.define('creature-detail', CreatureDetail);

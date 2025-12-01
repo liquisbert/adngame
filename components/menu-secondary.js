@@ -6,7 +6,7 @@ tpl.innerHTML = `
   <style>
     @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes float { 0%, 100% { transform: translateY(-2px); } 50% { transform: translateY(-8px); } }
-    @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(0, 212, 170, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(0, 212, 170, 0); } }
+    @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(29, 78, 216, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(29, 78, 216, 0); } }
     @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
     @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
     @keyframes countPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
@@ -24,30 +24,30 @@ tpl.innerHTML = `
     
     .points-display {
       background: linear-gradient(135deg, #051e3e, #0a3550);
-      border: 2px solid #00d4aa;
+      border: 2px solid #1D4ED8;
       border-radius: 12px;
       padding: 8px 16px;
-      color: #00e5cc;
+      color: #3B82F6;
       font-weight: 700;
       font-size: 14px;
       display: flex;
       align-items: center;
       gap: 8px;
       animation: slideUp 0.5s ease-out 0.05s both, popIn 0.4s ease-out;
-      box-shadow: 0 4px 12px rgba(0, 212, 170, 0.3);
+      box-shadow: 0 4px 12px rgba(29, 78, 216, 0.28);
       min-width: 140px;
       justify-content: center;
     }
     
     .points-display:hover {
-      border-color: #00e5cc;
-      box-shadow: 0 6px 16px rgba(0, 212, 170, 0.4);
+      border-color: #3B82F6;
+      box-shadow: 0 6px 16px rgba(29, 78, 216, 0.36);
       transform: translateY(-2px);
     }
     
     .points-value {
       font-size: 18px;
-      color: #00e5cc;
+      color: #3B82F6;
       transition: all 0.3s ease;
     }
     
@@ -77,8 +77,8 @@ tpl.innerHTML = `
     }
     
     .buy-btn {
-      background: linear-gradient(135deg, #00d4aa, #009988);
-      box-shadow: 0 3px 8px rgba(0, 212, 170, 0.25);
+      background: linear-gradient(135deg, #1D4ED8, #2563EB);
+      box-shadow: 0 3px 8px rgba(29, 78, 216, 0.24);
       animation: slideUp 0.5s ease-out 0.2s both;
       min-width: 52px;
       padding: 6px 8px;
@@ -87,8 +87,8 @@ tpl.innerHTML = `
     
     .buy-btn:hover {
       transform: scale(1.1) translateY(-4px);
-      background: linear-gradient(135deg, #00e5cc, #00d4aa);
-      box-shadow: 0 8px 20px rgba(0, 212, 170, 0.5);
+      background: linear-gradient(135deg, #3B82F6, #1D4ED8);
+      box-shadow: 0 8px 20px rgba(29, 78, 216, 0.44);
     }
     
     .buy-btn:active {
@@ -110,8 +110,8 @@ tpl.innerHTML = `
       align-items: center;
       justify-content: center;
       font-size: 20px;
-      background: linear-gradient(135deg, #00d4aa, #00a88a);
-      box-shadow: 0 3px 12px rgba(0, 212, 170, 0.35);
+      background: linear-gradient(135deg, #1D4ED8, #2563EB);
+      box-shadow: 0 3px 12px rgba(29, 78, 216, 0.34);
       animation: slideUp 0.5s ease-out 0.3s both, float 3s ease-in-out 0.5s infinite;
       flex-direction: row;
       gap: 0;
@@ -120,7 +120,7 @@ tpl.innerHTML = `
     
     #createBtn:hover {
       transform: scale(1.15) translateY(-6px);
-      box-shadow: 0 8px 24px rgba(0, 212, 170, 0.6), 0 0 0 4px rgba(0, 212, 170, 0.2);
+      box-shadow: 0 8px 24px rgba(29, 78, 216, 0.56), 0 0 0 4px rgba(29, 78, 216, 0.18);
       animation: float 3s ease-in-out infinite, pulse 2s ease-in-out infinite;
     }
     

@@ -35,8 +35,8 @@ tpl.innerHTML = `
     
     input:focus{
       outline: none;
-      border-color: #00d4aa;
-      box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.1);
+      border-color: #1D4ED8;
+      box-shadow: 0 0 0 3px rgba(29,78,216,0.10);
     }
     
     input.error{
@@ -45,24 +45,24 @@ tpl.innerHTML = `
     }
     
     .cost-info {
-      background: linear-gradient(135deg, rgba(0, 212, 170, 0.1), rgba(0, 168, 138, 0.1));
-      border-left: 4px solid #00d4aa;
+      background: linear-gradient(135deg, rgba(29,78,216,0.08), rgba(37,99,235,0.06));
+      border-left: 4px solid #1D4ED8;
       border-radius: 6px;
       padding: 10px;
       margin-bottom: 12px;
       animation: slideInUp 0.4s ease-out 0.15s both;
       font-size: 14px;
-      color: #00e5cc;
+      color: #3B82F6;
     }
     
     .cost-info.free {
-      border-left-color: #00e5cc;
-      background: linear-gradient(135deg, rgba(0, 229, 204, 0.1), rgba(0, 212, 170, 0.1));
+      border-left-color: #3B82F6;
+      background: linear-gradient(135deg, rgba(59,130,246,0.06), rgba(29,78,216,0.06));
     }
     
     .cost-label {
       font-weight: 600;
-      color: #00e5cc;
+      color: #3B82F6;
     }
     
     .cost-value {
@@ -72,11 +72,11 @@ tpl.innerHTML = `
     }
     
     .cost-info.free .cost-value {
-      color: #00e5cc;
+      color: #3B82F6;
     }
     
     .cost-info:not(.free) .cost-value {
-      color: #00d4aa;
+      color: #1D4ED8;
     }
     
     .cost-warning {

@@ -13,7 +13,7 @@ const tpl = document.createElement('template');
 tpl.innerHTML = `
   <style>
     @keyframes cardEntry { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes foodPulse { 0%, 100% { color: #6b7280; } 50% { color: #00d4aa; font-weight: 700; } }
+    @keyframes foodPulse { 0%, 100% { color: #6b7280; } 50% { color: #1D4ED8; font-weight: 700; } }
 
     .card{
       position: relative;
@@ -41,7 +41,7 @@ tpl.innerHTML = `
       box-shadow: 0 10px 22px rgba(0, 0, 0, 0.42);
     }
     .card:active { transform: translateY(-1px); }
-    .card:focus { outline: none; box-shadow: 0 0 0 4px rgba(0,212,170,0.06); border-color: #00d4aa; }
+    .card:focus { outline: none; box-shadow: 0 0 0 4px rgba(29,78,216,0.08); border-color: #1D4ED8; }
 
     /* Image fills the card */
     .img{
@@ -89,7 +89,7 @@ tpl.innerHTML = `
     }
     /* Mini barra de comida dentro de la tarjeta */
     .mini-bar{ width:100%; height:8px; background: rgba(13,31,60,0.2); border-radius:6px; overflow:hidden; margin-top:6px; border:1px solid rgba(0,0,0,0.12); }
-    .mini-fill{ height:100%; width:0%; background: linear-gradient(90deg,#00d4aa,#00a88a); transition: width 0.28s ease; }
+    .mini-fill{ height:100%; width:0%; background: linear-gradient(90deg,#1D4ED8,#2563EB); transition: width 0.28s ease; }
     .food-updated { animation: foodPulse 0.6s ease-in-out; }
   </style>
   <div class="card" tabindex="0" role="button" aria-label="Ver detalles de criatura">

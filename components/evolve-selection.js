@@ -8,7 +8,7 @@ tpl.innerHTML = `
   <style>
     @keyframes slideInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes itemPop { 0% { opacity: 0; transform: scale(0.8) rotateY(-20deg); } 100% { opacity: 1; transform: scale(1) rotateY(0); } }
-    @keyframes glow { 0%, 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.3); } 50% { box-shadow: 0 0 0 8px rgba(59, 130, 246, 0); } }
+    @keyframes glow { 0%, 100% { box-shadow: 0 0 0 0 rgba(79,70,229,0.32); } 50% { box-shadow: 0 0 0 8px rgba(79,70,229,0); } }
     
     h3{
       margin:0 0 8px 0;
@@ -17,7 +17,7 @@ tpl.innerHTML = `
     
     #desc {
       animation: slideInUp 0.4s ease-out 0.1s both;
-      color: #00e5cc;
+      color: #3B82F6;
       margin-bottom: 8px;
     }
     
@@ -32,13 +32,13 @@ tpl.innerHTML = `
       padding:12px;
       border-radius:10px;
       background: linear-gradient(135deg, #0d1f3c, #112240);
-      border:2px solid rgba(0,212,170,0.12);
+      border:2px solid rgba(29,78,216,0.20);
       cursor:pointer;
       min-width:90px;
       text-align:center;
       transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
       animation: itemPop 0.5s ease-out;
-      color: #00e5cc;
+      color: #3B82F6;
     }
     
     .item:nth-child(1) { animation-delay: 0.3s; }
@@ -48,10 +48,10 @@ tpl.innerHTML = `
     .item:nth-child(5) { animation-delay: 0.7s; }
     
     .item:hover{
-      border-color: #00e5cc;
+      border-color: #3B82F6;
       background: linear-gradient(135deg, #112240, #1a3a50);
       transform: scale(1.08) translateY(-4px);
-      box-shadow: 0 8px 24px rgba(0, 212, 170, 0.25);
+      box-shadow: 0 8px 24px rgba(29,78,216,0.30);
     }
     
     .item:active{
